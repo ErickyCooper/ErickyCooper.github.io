@@ -3,11 +3,11 @@
   <title>生活小站</title>
   
   <subtitle>生活明朗，万物可爱.</subtitle>
-  <link href="http://example.com/atom.xml" rel="self"/>
+  <link href="https://erickycooper.github.io/atom.xml" rel="self"/>
   
-  <link href="http://example.com/"/>
-  <updated>2025-01-29T10:14:08.118Z</updated>
-  <id>http://example.com/</id>
+  <link href="https://erickycooper.github.io/"/>
+  <updated>2025-01-30T02:21:15.699Z</updated>
+  <id>https://erickycooper.github.io/</id>
   
   <author>
     <name>ErickyCooper</name>
@@ -17,9 +17,32 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>阳光不燥，微风正好</title>
+    <link href="https://erickycooper.github.io/posts/b8cf1317.html"/>
+    <id>https://erickycooper.github.io/posts/b8cf1317.html</id>
+    <published>2025-01-30T02:18:40.000Z</published>
+    <updated>2025-01-30T02:21:15.699Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="夏至"><a href="#夏至" class="headerlink" title="夏至"></a>夏至</h1><blockquote><p>一生的时间很短<br>  短到不过是两颗心之间的距离<br>  一生的时间也很长<br>  不如我们试着走走看</p></blockquote><div class="tip "><p>defult</p></div>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;夏至&quot;&gt;&lt;a href=&quot;#夏至&quot; class=&quot;headerlink&quot; title=&quot;夏至&quot;&gt;&lt;/a&gt;夏至&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;一生的时间很短&lt;br&gt;  短到不过是两颗心之间的距离&lt;br&gt;  一生的时间也很长&lt;br&gt;  不如我们试着走走看&lt;/</summary>
+      
+    
+    
+    
+    
+    <category term="生活" scheme="https://erickycooper.github.io/tags/%E7%94%9F%E6%B4%BB/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Hello World</title>
-    <link href="http://example.com/posts/4a17b156.html"/>
-    <id>http://example.com/posts/4a17b156.html</id>
+    <link href="https://erickycooper.github.io/posts/4a17b156.html"/>
+    <id>https://erickycooper.github.io/posts/4a17b156.html</id>
     <published>2025-01-29T09:46:09.523Z</published>
     <updated>2025-01-29T10:14:08.118Z</updated>
     
