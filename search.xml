@@ -511,6 +511,43 @@
   /* 这里的2是代表导航栏的第2个元素，即有子菜单的元素，可以按自己需求修改 */
   .menus_items .menus_item:nth-child(2) .menus_item_child {
     left: -125px;
+  }
+
+  /* movies 页面卡片布局 */
+  .media-page-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 1rem;
+  }
+
+  .media-card {
+    padding: 1rem 1.1rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(59, 112, 252, 0.16);
+    backdrop-filter: blur(3px);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .media-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(59, 112, 252, 0.14);
+  }
+
+  .media-card h3 {
+    margin: 0 0 0.6rem 0;
+  }
+
+  .media-card p {
+    margin: 0 0 0.8rem 0;
+    opacity: 0.85;
+  }
+
+  [data-theme="dark"] .media-card {
+    background: rgba(18, 18, 18, 0.88);
+    border-color: rgba(40, 180, 200, 0.24);
+  }
   }]]></content>
   </entry>
   <entry>
@@ -625,6 +662,59 @@
     workboard.innerHTML = currentTimeHtml;
   }
 }, 1000);
+]]></content>
+  </entry>
+  <entry>
+    <title>电影</title>
+    <url>/movies/index.html</url>
+    <content><![CDATA[<div class="media-page-grid">
+  <div class="media-card">
+    <h3>🎬 想看清单</h3>
+    <p>准备在周末补完的电影。</p>
+    <ul>
+      <li><a href="https://movie.douban.com/subject/1295644/" target="_blank" rel="noopener">这个杀手不太冷（1994）</a> —— 冷酷外壳下是细腻又克制的温柔。</li>
+      <li><a href="https://movie.douban.com/subject/1296736/" target="_blank" rel="noopener">钢琴家（2002）</a> —— 战争中的个体命运，沉重但值得反复看。</li>
+      <li><a href="https://movie.douban.com/subject/1292402/" target="_blank" rel="noopener">西西里的美丽传说（2000）</a> —— 少年视角与时代偏见交织的经典叙事。</li>
+    </ul>
+  </div>
+
+  <div class="media-card">
+    <h3>🍿 最近看过</h3>
+    <p>近期看完并想记录感受的影片。</p>
+    <ul>
+      <li><a href="https://movie.douban.com/subject/1292052/" target="_blank" rel="noopener">肖申克的救赎（1994）</a> —— 希望，是最强大的自由。</li>
+      <li><a href="https://movie.douban.com/subject/1291546/" target="_blank" rel="noopener">霸王别姬（1993）</a> —— 戏里戏外，都是时代洪流下的人生悲欢。</li>
+      <li><a href="https://movie.douban.com/subject/1292722/" target="_blank" rel="noopener">泰坦尼克号（1997）</a> —— 爱情与灾难交织的史诗级爱情片。</li>
+    </ul>
+  </div>
+
+  <div class="media-card">
+    <h3>⭐ 推荐收藏</h3>
+    <p>我会反复重看的高分电影。</p>
+    <ul>
+      <li><a href="https://movie.douban.com/subject/1292063/" target="_blank" rel="noopener">美丽人生（1997）</a> —— 用幽默守护爱的伟大与尊严。</li>
+      <li><a href="https://movie.douban.com/subject/1294639/" target="_blank" rel="noopener">千与千寻（2001）</a> —— 成长与告别主题下的治愈系神作。</li>
+      <li><a href="https://movie.douban.com/subject/1291561/" target="_blank" rel="noopener">龙猫（1988）</a> —— 温柔、纯粹、永不过时的童年想象。</li>
+    </ul>
+  </div>
+</div>
+
+<!-- > 后续你可以继续按这个格式补充：电影名 + 年份 + 豆瓣链接 + 一句话短评。 -->
+]]></content>
+  </entry>
+  <entry>
+    <title>音乐</title>
+    <url>/music/index.html</url>
+    <content><![CDATA[<h2 id="我的歌单"><a href="#我的歌单" class="headerlink" title="我的歌单"></a>我的歌单</h2><div class="aplayer"
+  data-id="13708766041"
+  data-server="netease"
+  data-type="playlist"
+  data-order="list"
+  data-fixed="false"
+  data-preload="auto"
+  data-autoplay="false"
+  data-mutex="true">
+</div>
 ]]></content>
   </entry>
   <entry>
