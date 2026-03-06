@@ -6,7 +6,7 @@
   <link href="https://erickycooper.github.io/atom.xml" rel="self"/>
   
   <link href="https://erickycooper.github.io/"/>
-  <updated>2026-02-06T22:00:00.000Z</updated>
+  <updated>2026-03-06T23:00:00.000Z</updated>
   <id>https://erickycooper.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>【算法思维札记】</title>
+    <link href="https://erickycooper.github.io/posts/12524d48.html"/>
+    <id>https://erickycooper.github.io/posts/12524d48.html</id>
+    <published>2026-03-06T23:00:00.000Z</published>
+    <updated>2026-03-06T23:00:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p><strong>算法思维札记</strong><br>不只讲答案，专讲思路演进与迁移能力</p></blockquote><div class="note info flat"><p><strong>本文定位：</strong> 字符串</p></div><h3 id="题目卡片"><a href="#题目卡片" class="headerlink" title="题目卡片"></a>题目卡片</h3><div class="algo-card algo-code-card">  <ul>    <li><strong>题目：</strong>检查二进制字符串字段</li>    <li><strong>难度：</strong>简单</li>    <li><strong>标签：</strong>字符串</li>    <li><strong>题意：</strong>给定一个不含前导零、且首字符为 <code>'1'</code> 的二进制字符串，判断其中由连续 <code>'1'</code> 组成的字段数量是否不超过 1。</li>    <li><strong>约束条件：</strong><br>      • <code>1 &lt;= s.length &lt;= 100</code><br>      • <code>s[i]</code> 为 <code>'0'</code> 或 <code>'1'</code><br>      • <code>s[0]</code> 为 <code>'1'</code>    </li>    <li><strong>示例：</strong><br>输入 <code>s = "1001"</code>，输出 <code>false</code><br>输入 <code>s = "110"</code>，输出 <code>true</code></li>  </ul></div><h3 id="核心问题"><a href="#核心问题" class="headerlink" title="核心问题"></a>核心问题</h3><div class="algo-card algo-code-card">  <p>这题本质是：<strong>判断 <code>'1'</code> 字段是否“断开后又重现”</strong>。</p></div><h3 id="第一直觉"><a href="#第一直觉" class="headerlink" title="第一直觉"></a>第一直觉</h3><div class="algo-card algo-code-card">  <p>第一反应是遍历字符串并统计连续 <code>'1'</code> 字段个数，字段数大于 1 则返回 <code>false</code>。</p>  <p>这个做法可行，但偏重，因为我们只关心“是否出现第二个字段”，不需要精确计数。</p></div><h3 id="卡点"><a href="#卡点" class="headerlink" title="卡点"></a>卡点</h3><div class="algo-card algo-code-card">  <p><strong>卡点 1：</strong>一上来就完整计数，状态变量变多，逻辑变长。</p>  <p><strong>卡点 2：</strong>忽略边界信号。关键不是数几段，而是有没有从 <code>1 → 0</code> 后又回到 <code>1</code>。</p></div><h3 id="关键思考点"><a href="#关键思考点" class="headerlink" title="关键思考点"></a>关键思考点</h3><div class="algo-card algo-card-highlight algo-code-card">  <ul>    <li>出现子串 <code>"01"</code>，说明一个 <code>'1'</code> 字段结束；</li>    <li>在本题约束下，出现 <code>"01"</code> 即表示字段发生“断开再出现”；</li>    <li>因此可直接一句判断完成。</li>  </ul>  <p><strong>结论：</strong>只要包含 <code>"01"</code>，返回 <code>false</code>；否则返回 <code>true</code>。</p></div><h3 id="最终解法（思路）"><a href="#最终解法（思路）" class="headerlink" title="最终解法（思路）"></a>最终解法（思路）</h3><div class="algo-card algo-code-card">  <ol>    <li>检查字符串是否包含 <code>"01"</code>；</li>    <li>包含则返回 <code>false</code>；</li>    <li>否则返回 <code>true</code>。</li>  </ol></div><h3 id="代码（Go）"><a href="#代码（Go）" class="headerlink" title="代码（Go）"></a>代码（Go）</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">checkOnesSegment</span><span class="params">(s <span class="type">string</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">    <span class="comment">// 只要字符串中不存在 &quot;01&quot; 这个子串，就说明所有的 &#x27;1&#x27; 都是连续的</span></span><br><span class="line">    <span class="keyword">return</span> !contains(s, <span class="string">&quot;01&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// contains 检查是否包含子串</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">contains</span><span class="params">(s, substr <span class="type">string</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt;= <span class="built_in">len</span>(s)-<span class="built_in">len</span>(substr); i++ &#123;</span><br><span class="line">        <span class="keyword">if</span> s[i:i+<span class="built_in">len</span>(substr)] == substr &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><div class="algo-card algo-code-card">  <p><strong>复杂度：</strong>时间 O(n)，空间 O(1)</p></div><h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ol><li><strong>计数问题可先尝试降维成模式判断</strong>（是否存在某个关键子串/边界）。</li><li>对字符串题，优先寻找“结构信号”（如 <code>01</code>、<code>10</code>、重复边界），常常比维护多状态更稳。</li></ol><hr><h2 id="本题评分"><a href="#本题评分" class="headerlink" title="本题评分"></a>本题评分</h2><ul><li>思维启发度：⭐️⭐️⭐️⭐️☆</li><li>套路复用度：⭐️⭐️⭐️⭐️⭐️</li><li>实现复杂度：⭐️☆☆☆☆</li><li>面试价值：⭐️⭐️⭐️☆☆</li></ul><hr><h2 id="一页总结"><a href="#一页总结" class="headerlink" title="一页总结"></a>一页总结</h2><ol><li>这题不是在考遍历，而是需要把“计数”改写为“识别”。</li><li>看到“是否超过一次/是否出现第二次”这类问法，优先想关键转折。</li><li>核心能力是抽象：从具体过程抽出可复用判断条件。</li></ol>]]></content>
+    
+    
+    <summary type="html">不只讲答案，专讲思路演进与迁移能力</summary>
+    
+    
+    
+    <category term="算法专题" scheme="https://erickycooper.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%93%E9%A2%98/"/>
+    
+    <category term="算法思维札记" scheme="https://erickycooper.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%93%E9%A2%98/%E7%AE%97%E6%B3%95%E6%80%9D%E7%BB%B4%E6%9C%AD%E8%AE%B0/"/>
+    
+    <category term="字符串" scheme="https://erickycooper.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%93%E9%A2%98/%E7%AE%97%E6%B3%95%E6%80%9D%E7%BB%B4%E6%9C%AD%E8%AE%B0/%E5%AD%97%E7%AC%A6%E4%B8%B2/"/>
+    
+    
+    <category term="算法复盘" scheme="https://erickycooper.github.io/tags/%E7%AE%97%E6%B3%95%E5%A4%8D%E7%9B%98/"/>
+    
+    <category term="学习" scheme="https://erickycooper.github.io/tags/%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
   
   <entry>
     <title>时代的疫病与不朽的痴狂：评《霍乱时期的爱情》</title>
