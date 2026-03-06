@@ -86,6 +86,97 @@
       </tags>
   </entry>
   <entry>
+    <title>【算法思维札记】</title>
+    <url>/posts/9f2a7c31.html</url>
+    <content><![CDATA[<blockquote>
+<p><strong>算法思维札记</strong><br>不只讲答案，专讲思路演进与迁移能力</p>
+</blockquote>
+<div class="note info flat"><p><strong>本文定位：</strong> 字符串 + 滑动窗口</p>
+</div>
+<h3 id="题目卡片"><a href="#题目卡片" class="headerlink" title="题目卡片"></a>题目卡片</h3><div class="algo-card algo-code-card">
+  <ul>
+    <li><strong>题目：</strong>使二进制字符串变成交替字符串的最少操作次数</li>
+    <li><strong>难度：</strong>中等</li>
+    <li><strong>标签：</strong>字符串、滑动窗口、失配计数</li>
+    <li><strong>题意：</strong>给定二进制串 <code>s</code>，可进行两类操作：<br>
+      ① 把首字符移到末尾（可做任意次）；<br>
+      ② 反转任意字符（<code>0 ↔ 1</code>）。<br>
+      目标是在允许任意次类型 1 的前提下，最小化类型 2 的次数，使字符串变为交替串。
+    </li>
+    <li><strong>示例：</strong><br>
+      输入 <code>s = "111000"</code>，输出 <code>2</code><br>
+      输入 <code>s = "010"</code>，输出 <code>0</code><br>
+      输入 <code>s = "1110"</code>，输出 <code>1</code>
+    </li>
+  </ul>
+</div>
+
+<h3 id="核心问题"><a href="#核心问题" class="headerlink" title="核心问题"></a>核心问题</h3><div class="algo-card algo-code-card">
+  <p>这题本质是：<strong>在所有“旋转后长度为 n 的窗口”里，找与交替模板失配最少的那个窗口</strong>。</p>
+</div>
+
+<h3 id="第一直觉"><a href="#第一直觉" class="headerlink" title="第一直觉"></a>第一直觉</h3><div class="algo-card algo-code-card">
+  <p>第一反应是“枚举每一种旋转，再计算改成交替串要翻转多少位”。</p>
+  <p>但这样会变成 <code>O(n^2)</code>：<code>n</code> 次旋转 × 每次 <code>O(n)</code> 比较，字符串长时会超时。</p>
+</div>
+
+<h3 id="卡点"><a href="#卡点" class="headerlink" title="卡点"></a>卡点</h3><div class="algo-card algo-code-card">
+  <p><strong>卡点 1：</strong>旋转是环状结构，直接逐次构造旋转串很重。</p>
+  <p><strong>卡点 2：</strong>每次都从头统计失配，重复计算太多。</p>
+</div>
+
+<h3 id="关键思考点"><a href="#关键思考点" class="headerlink" title="关键思考点"></a>关键思考点</h3><div class="algo-card algo-card-highlight algo-code-card">
+  <ul>
+    <li>把字符串扩展成 <code>s2 = s + s</code>，这样任意一次“首字符移到末尾”都对应 <code>s2</code> 里的一个长度为 <code>n</code> 的连续窗口；</li>
+    <li>交替目标只有两种模板：<code>0101...</code> 和 <code>1010...</code>；</li>
+    <li>用滑动窗口维护当前窗口相对两种模板的失配数 <code>diff1</code>、<code>diff2</code>；</li>
+    <li>窗口每右移一格，只增量更新进出字符，不重算整段。</li>
+  </ul>
+  <p><strong>结论：</strong>遍历所有长度为 <code>n</code> 的窗口，取 <code>min(diff1, diff2)</code> 的最小值即答案。</p>
+</div>
+
+<h3 id="最终解法（思路）"><a href="#最终解法（思路）" class="headerlink" title="最终解法（思路）"></a>最终解法（思路）</h3><div class="algo-card algo-code-card">
+  <ol>
+    <li>设 <code>n = len(s)</code>，构造 <code>s2 = s + s</code>；</li>
+    <li>遍历 <code>s2</code>，同步统计当前位置对两种交替模板的失配增量；</li>
+    <li>当窗口长度超过 <code>n</code>，移除左端字符对失配的贡献；</li>
+    <li>当窗口长度正好为 <code>n</code>，用 <code>min(diff1, diff2)</code> 更新答案。</li>
+  </ol>
+</div>
+
+<h3 id="代码（Go）"><a href="#代码（Go）" class="headerlink" title="代码（Go）"></a>代码（Go）</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">minFlips</span><span class="params">(s <span class="type">string</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">    n := <span class="built_in">len</span>(s)</span><br><span class="line">    s2 := s + s</span><br><span class="line"></span><br><span class="line">    diff1, diff2 := <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">    res := n</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(s2); i++ &#123;</span><br><span class="line">        expected1 := <span class="type">byte</span>(<span class="string">&#x27;0&#x27;</span>)</span><br><span class="line">        expected2 := <span class="type">byte</span>(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> i%<span class="number">2</span> == <span class="number">1</span> &#123;</span><br><span class="line">            expected1 = <span class="string">&#x27;1&#x27;</span></span><br><span class="line">            expected2 = <span class="string">&#x27;0&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> s2[i] != expected1 &#123;</span><br><span class="line">            diff1++</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> s2[i] != expected2 &#123;</span><br><span class="line">            diff2++</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> i &gt;= n &#123;</span><br><span class="line">            j := i - n</span><br><span class="line"></span><br><span class="line">            exp1 := <span class="type">byte</span>(<span class="string">&#x27;0&#x27;</span>)</span><br><span class="line">            exp2 := <span class="type">byte</span>(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> j%<span class="number">2</span> == <span class="number">1</span> &#123;</span><br><span class="line">                exp1 = <span class="string">&#x27;1&#x27;</span></span><br><span class="line">                exp2 = <span class="string">&#x27;0&#x27;</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> s2[j] != exp1 &#123;</span><br><span class="line">                diff1--</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> s2[j] != exp2 &#123;</span><br><span class="line">                diff2--</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> i &gt;= n<span class="number">-1</span> &#123;</span><br><span class="line">            res = min(res, min(diff1, diff2))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="algo-card algo-code-card">
+  <p><strong>复杂度：</strong>时间 O(n)，空间 O(n)</p>
+</div>
+
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ol>
+<li>遇到“可旋转/环状”字符串，优先想到 <code>s + s</code> 把环展开成线性窗口。</li>
+<li>遇到“最少修改成某模式”，可先把“修改次数”转为“失配次数”。</li>
+<li>当目标模式数量很少（这里只有两种），可以并行维护多个计数器一次完成。</li>
+</ol>
+<hr>
+<h2 id="本题评分"><a href="#本题评分" class="headerlink" title="本题评分"></a>本题评分</h2><ul>
+<li>思维启发度：⭐️⭐️⭐️⭐️⭐️</li>
+<li>套路复用度：⭐️⭐️⭐️⭐️⭐️</li>
+<li>实现复杂度：⭐️⭐️⭐️☆☆</li>
+<li>面试价值：⭐️⭐️⭐️⭐️⭐️</li>
+</ul>
+<hr>
+<h2 id="一页总结"><a href="#一页总结" class="headerlink" title="一页总结"></a>一页总结</h2><ol>
+<li>旋转不必真的转，<code>s + s</code> + 固定窗口就能覆盖所有情况。</li>
+<li>翻转最少次数 = 与目标模板的最小失配数。</li>
+<li>滑窗增量更新是这题从 <code>O(n^2)</code> 到 <code>O(n)</code> 的关键。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>算法专题</category>
+      </categories>
+      <tags>
+        <tag>算法复盘</tag>
+        <tag>学习</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>时代的疫病与不朽的痴狂：评《霍乱时期的爱情》</title>
     <url>/posts/e8b2d1a4.html</url>
     <content><![CDATA[<p>·</p>
@@ -204,97 +295,6 @@
       </tags>
   </entry>
   <entry>
-    <title>【算法思维札记】</title>
-    <url>/posts/9f2a7c31.html</url>
-    <content><![CDATA[<blockquote>
-<p><strong>算法思维札记</strong><br>不只讲答案，专讲思路演进与迁移能力</p>
-</blockquote>
-<div class="note info flat"><p><strong>本文定位：</strong> 字符串 + 滑动窗口</p>
-</div>
-<h3 id="题目卡片"><a href="#题目卡片" class="headerlink" title="题目卡片"></a>题目卡片</h3><div class="algo-card algo-code-card">
-  <ul>
-    <li><strong>题目：</strong>使二进制字符串变成交替字符串的最少操作次数</li>
-    <li><strong>难度：</strong>中等</li>
-    <li><strong>标签：</strong>字符串、滑动窗口、失配计数</li>
-    <li><strong>题意：</strong>给定二进制串 <code>s</code>，可进行两类操作：<br>
-      ① 把首字符移到末尾（可做任意次）；<br>
-      ② 反转任意字符（<code>0 ↔ 1</code>）。<br>
-      目标是在允许任意次类型 1 的前提下，最小化类型 2 的次数，使字符串变为交替串。
-    </li>
-    <li><strong>示例：</strong><br>
-      输入 <code>s = "111000"</code>，输出 <code>2</code><br>
-      输入 <code>s = "010"</code>，输出 <code>0</code><br>
-      输入 <code>s = "1110"</code>，输出 <code>1</code>
-    </li>
-  </ul>
-</div>
-
-<h3 id="核心问题"><a href="#核心问题" class="headerlink" title="核心问题"></a>核心问题</h3><div class="algo-card algo-code-card">
-  <p>这题本质是：<strong>在所有“旋转后长度为 n 的窗口”里，找与交替模板失配最少的那个窗口</strong>。</p>
-</div>
-
-<h3 id="第一直觉"><a href="#第一直觉" class="headerlink" title="第一直觉"></a>第一直觉</h3><div class="algo-card algo-code-card">
-  <p>第一反应是“枚举每一种旋转，再计算改成交替串要翻转多少位”。</p>
-  <p>但这样会变成 <code>O(n^2)</code>：<code>n</code> 次旋转 × 每次 <code>O(n)</code> 比较，字符串长时会超时。</p>
-</div>
-
-<h3 id="卡点"><a href="#卡点" class="headerlink" title="卡点"></a>卡点</h3><div class="algo-card algo-code-card">
-  <p><strong>卡点 1：</strong>旋转是环状结构，直接逐次构造旋转串很重。</p>
-  <p><strong>卡点 2：</strong>每次都从头统计失配，重复计算太多。</p>
-</div>
-
-<h3 id="关键思考点"><a href="#关键思考点" class="headerlink" title="关键思考点"></a>关键思考点</h3><div class="algo-card algo-card-highlight algo-code-card">
-  <ul>
-    <li>把字符串扩展成 <code>s2 = s + s</code>，这样任意一次“首字符移到末尾”都对应 <code>s2</code> 里的一个长度为 <code>n</code> 的连续窗口；</li>
-    <li>交替目标只有两种模板：<code>0101...</code> 和 <code>1010...</code>；</li>
-    <li>用滑动窗口维护当前窗口相对两种模板的失配数 <code>diff1</code>、<code>diff2</code>；</li>
-    <li>窗口每右移一格，只增量更新进出字符，不重算整段。</li>
-  </ul>
-  <p><strong>结论：</strong>遍历所有长度为 <code>n</code> 的窗口，取 <code>min(diff1, diff2)</code> 的最小值即答案。</p>
-</div>
-
-<h3 id="最终解法（思路）"><a href="#最终解法（思路）" class="headerlink" title="最终解法（思路）"></a>最终解法（思路）</h3><div class="algo-card algo-code-card">
-  <ol>
-    <li>设 <code>n = len(s)</code>，构造 <code>s2 = s + s</code>；</li>
-    <li>遍历 <code>s2</code>，同步统计当前位置对两种交替模板的失配增量；</li>
-    <li>当窗口长度超过 <code>n</code>，移除左端字符对失配的贡献；</li>
-    <li>当窗口长度正好为 <code>n</code>，用 <code>min(diff1, diff2)</code> 更新答案。</li>
-  </ol>
-</div>
-
-<h3 id="代码（Go）"><a href="#代码（Go）" class="headerlink" title="代码（Go）"></a>代码（Go）</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">minFlips</span><span class="params">(s <span class="type">string</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">    n := <span class="built_in">len</span>(s)</span><br><span class="line">    s2 := s + s</span><br><span class="line"></span><br><span class="line">    diff1, diff2 := <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">    res := n</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(s2); i++ &#123;</span><br><span class="line">        expected1 := <span class="type">byte</span>(<span class="string">&#x27;0&#x27;</span>)</span><br><span class="line">        expected2 := <span class="type">byte</span>(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> i%<span class="number">2</span> == <span class="number">1</span> &#123;</span><br><span class="line">            expected1 = <span class="string">&#x27;1&#x27;</span></span><br><span class="line">            expected2 = <span class="string">&#x27;0&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> s2[i] != expected1 &#123;</span><br><span class="line">            diff1++</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> s2[i] != expected2 &#123;</span><br><span class="line">            diff2++</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> i &gt;= n &#123;</span><br><span class="line">            j := i - n</span><br><span class="line"></span><br><span class="line">            exp1 := <span class="type">byte</span>(<span class="string">&#x27;0&#x27;</span>)</span><br><span class="line">            exp2 := <span class="type">byte</span>(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> j%<span class="number">2</span> == <span class="number">1</span> &#123;</span><br><span class="line">                exp1 = <span class="string">&#x27;1&#x27;</span></span><br><span class="line">                exp2 = <span class="string">&#x27;0&#x27;</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> s2[j] != exp1 &#123;</span><br><span class="line">                diff1--</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> s2[j] != exp2 &#123;</span><br><span class="line">                diff2--</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> i &gt;= n<span class="number">-1</span> &#123;</span><br><span class="line">            res = min(res, min(diff1, diff2))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<div class="algo-card algo-code-card">
-  <p><strong>复杂度：</strong>时间 O(n)，空间 O(n)</p>
-</div>
-
-<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ol>
-<li>遇到“可旋转/环状”字符串，优先想到 <code>s + s</code> 把环展开成线性窗口。</li>
-<li>遇到“最少修改成某模式”，可先把“修改次数”转为“失配次数”。</li>
-<li>当目标模式数量很少（这里只有两种），可以并行维护多个计数器一次完成。</li>
-</ol>
-<hr>
-<h2 id="本题评分"><a href="#本题评分" class="headerlink" title="本题评分"></a>本题评分</h2><ul>
-<li>思维启发度：⭐️⭐️⭐️⭐️⭐️</li>
-<li>套路复用度：⭐️⭐️⭐️⭐️⭐️</li>
-<li>实现复杂度：⭐️⭐️⭐️☆☆</li>
-<li>面试价值：⭐️⭐️⭐️⭐️⭐️</li>
-</ul>
-<hr>
-<h2 id="一页总结"><a href="#一页总结" class="headerlink" title="一页总结"></a>一页总结</h2><ol>
-<li>旋转不必真的转，<code>s + s</code> + 固定窗口就能覆盖所有情况。</li>
-<li>翻转最少次数 = 与目标模板的最小失配数。</li>
-<li>滑窗增量更新是这题从 <code>O(n^2)</code> 到 <code>O(n)</code> 的关键。</li>
-</ol>
-]]></content>
-      <categories>
-        <category>算法专题</category>
-      </categories>
-      <tags>
-        <tag>算法复盘</tag>
-        <tag>学习</tag>
-      </tags>
-  </entry>
-  <entry>
     <title></title>
     <url>/manifest.json</url>
     <content><![CDATA[{"name":"ErickyCooper`Blog","short_name":"Ericky","theme_color":"#3b70fc","background_color":"#3b70fc","display":"standalone","scope":"/","start_url":"/","icons":[{"src":"/img/siteicon/16.png","sizes":"16x16","type":"image/png"},{"src":"/img/siteicon/32.png","sizes":"32x32","type":"image/png"},{"src":"/img/siteicon/apple-icon-180.png","sizes":"48x48","type":"image/png"},{"src":"/img/siteicon/manifest-icon-192.maskable.png","sizes":"64x64","type":"image/png"},{"src":"/img/siteicon/manifest-icon-512.maskable.png","sizes":"128x128","type":"image/png"}],"splash_pages":null}]]></content>
@@ -361,6 +361,11 @@
 <li>最后看「可迁移结论」把这道题变成一类题。</li>
 </ol>
 ]]></content>
+  </entry>
+  <entry>
+    <title>分类</title>
+    <url>/categories/index.html</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title></title>
